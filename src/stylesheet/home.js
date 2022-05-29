@@ -57,11 +57,11 @@ const home = StyleSheet.create({
   },
   button_random: {
     backgroundColor: "#3e4684",
-    borderWidth: 2,
-    borderColor: "#3e4684",
+    borderWidth: 1,
+    borderColor: "#e2e2e2",
   },
   button_press: {
-    borderColor: "#d7d7d7",
+    borderColor: "#3b1b1b",
   },
   button_random_text: {
     color: "#FFFFFF",

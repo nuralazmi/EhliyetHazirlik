@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 
 
 import screens from "./src/screens";
+
 const Stack = createNativeStackNavigator();
 
 
@@ -21,6 +22,11 @@ const App = () => {
           name="Home"
           component={screens.HomeScreen}
           options={{ title: "Home" }}
+        />
+        <Stack.Screen
+          name="Start"
+          component={screens.Start}
+          options={{ title: "Start" }}
         />
         <Stack.Screen
           name="List"

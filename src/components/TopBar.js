@@ -1,12 +1,12 @@
 import { StatusBar } from "react-native";
 import React from "react";
-
-const TopBar = () => {
+import colors from "../stylesheet/colors";
+const TopBar = (props) => {
   return <StatusBar
     animated={true}
-    backgroundColor="#f2f8fd"
-    barStyle="dark-content"
+    backgroundColor={props.theme === "dark" ? colors.dark.backgroundColor : colors.light.backgroundColor}
+    barStyle={props.theme === "dark" ? "light-content" : "dark-content"}
   />;
 };
 
-export default TopBar
+export default TopBar;

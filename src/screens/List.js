@@ -1,19 +1,16 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import React from "react";
 import styles from "../stylesheet";
 import components from "../components";
 
-const HomeScreen = ({ navigation }) => {
+const List = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
-      <components.StatusBar />
-      <View>
-        <Text>List ekranı</Text>
-      </View>
-
+      <components.StatusBar theme="dark" />
+      <components.PageHeader theme="dark" text="Sınav Listesi" navigation={navigation} />
     </SafeAreaView>
   );
 };
 
 
-export default HomeScreen;
+export default List;

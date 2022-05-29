@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StatusBar, Alert, Pressable } from "react-native";
+import { View, Text, SafeAreaView, StatusBar, Alert, Pressable, Button } from "react-native";
 import React from "react";
 import styles from "../stylesheet";
 import components from "../components";
@@ -13,6 +13,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.home.buttonContainer}>
         <Pressable
           style={({ pressed }) => [styles.home.button, styles.home.button_random, pressed ? styles.home.button_press : ""]}
+          onPress={() => navigation.navigate("Start")}
         >
           <Text style={[styles.home.button_text, styles.home.button_random_text]}
           >Sınava Başla</Text>
