@@ -2,6 +2,10 @@ import { StyleSheet } from "react-native";
 import colors from "./colors";
 
 const question = StyleSheet.create({
+  content: {
+    display: "flex",
+    flex: 1,
+  },
   soru_kutusu: {
     width: "100%",
     backgroundColor: "#FFFFFF",
@@ -52,21 +56,24 @@ const question = StyleSheet.create({
   secenek_kutusu: {},
   secenek: {},
   scrollbar: {
-    marginBottom: 38,
+    // flex : 1,
+    // marginBottom: 38,
     // paddingBottom: 60,
     // flexGrow:1
+    height: "50%",
   },
   sonuc_btn_container: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.dark.backgroundColor,
-    height: 50,
-
+    padding: 13,
+  },
+  sonuc_btn_container_press: {
+    backgroundColor: "#525ba0",
   },
   sonuc_btn_text: {
     textAlign: "center",
-    padding: 5,
     fontSize: 16,
     fontWeight: "bold",
     color: "#FFFFFF",

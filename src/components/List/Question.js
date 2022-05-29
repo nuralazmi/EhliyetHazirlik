@@ -4,19 +4,11 @@ import React from "react";
 import RadioButtonContainer from "../Input/RadioButton/RadioButtonContainer";
 import { useDispatch } from "react-redux";
 import { setAnswer } from "../../store/quiz";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import colors from "../../stylesheet/colors";
-import icons from "../../scripts/icons";
 
 const Question = (props) => {
   const dispatch = useDispatch();
   const onRadioButtonPress = (itemIdx) => {
-    let data = {
-      value: props.items[itemIdx].value,
-      quiz_id: props.items[itemIdx].quiz_id,
-      question_id: props.items[itemIdx].question_id,
-    };
-    dispatch(setAnswer(data));
+    console.log("aa");
   };
 
   return (

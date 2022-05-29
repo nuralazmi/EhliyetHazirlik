@@ -12,10 +12,12 @@ const app = StyleSheet.create({
     // backgroundColor: "#3e4684",
     width: "100%",
     height: "100%",
+    display: "flex",
     // padding: 10,
   },
   page_header: {
     padding: 10,
+    // height : 50,
     // backgroundColor: "#FFFFFF",
   },
   header_icon_container: {
@@ -26,7 +28,7 @@ const app = StyleSheet.create({
     // paddingBottom : 10,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems : 'center',
+    alignItems: "center",
   },
   header_icon: {
     marginLeft: -4,
@@ -43,7 +45,8 @@ const app = StyleSheet.create({
   },
   page_container: {
     // marginTop: 5,
-    marginBottom: 50,
+    // marginBottom: 50,
+    flex: 1,
   },
   content_box: {
     // backgroundColor: "#FFFFFF",
