@@ -8,6 +8,9 @@ const List = ({ navigation }) => {
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
       <components.StatusBar theme="dark" />
       <components.PageHeader theme="dark" text="Sınav Listesi" navigation={navigation} />
+      <View style={[styles.app.page_container]}>
+        <Text>Azmi</Text>
+      </View>
     </SafeAreaView>
   );
 };

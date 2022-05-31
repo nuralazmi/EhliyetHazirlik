@@ -1,115 +1,61 @@
-import { View, Text, SafeAreaView, ScrollView, Button, Pressable, Dimensions, Alert } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  PermissionsAndroid,
+  Button,
+  Pressable,
+  Dimensions,
+  Alert, Animated,
+} from "react-native";
 import React, { useState } from "react";
 import styles from "../stylesheet";
 import components from "../components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../api";
+import { setSelectedDetails } from "../store/quiz";
+
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  const paddingToBottom = 20;
+  return layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom;
+};
+
 
 const Start = ({ navigation }) => {
-  const question_data = [
-    {
-      header: "Header",
-      details: [
-        "detay 1",
-        "detay 2",
-        "detay 3",
-      ],
-      question_type: "image",
-      img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-      item_type: "text",
-      items: [
-        {
-          text: "secenekler 1",
-          value: "A",
-          quiz_id: "1",
-          question_id: "1",
-          answer_id: "1",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-        {
-          text: "secenekler 2",
-          value: "B",
-          quiz_id: "1",
-          question_id: "1",
-          answer_id: "2",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-        {
-          text: "secenekler 3",
-          value: "C",
-          quiz_id: "1",
-          question_id: "1",
-          answer_id: "3",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-      ],
-    },
-    {
-      header: "soru iki başlık",
-      details: [],
-      question_type: "text",
-      img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-      item_type: "text",
-      items: [
-        {
-          text: "secenekler 1",
-          value: "A",
-          quiz_id: "1",
-          question_id: "2",
-          answer_id: "1",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-        {
-          text: "secenekler 2",
-          value: "B",
-          quiz_id: "1",
-          question_id: "2",
-          answer_id: "2",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-        {
-          text: "secenekler 3",
-          value: "C",
-          quiz_id: "1",
-          question_id: "2",
-          answer_id: "3",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-      ],
-    },
-    {
-      header: "soru iki başlık",
-      details: [],
-      question_type: "text",
-      img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-      item_type: "text",
-      items: [
-        {
-          text: "secenekler 1",
-          value: "A",
-          quiz_id: "1",
-          question_id: "3",
-          answer_id: "1",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-        {
-          text: "secenekler 2",
-          value: "B",
-          quiz_id: "1",
-          question_id: "3",
-          answer_id: "2",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-        {
-          text: "secenekler 3",
-          value: "C",
-          quiz_id: "1",
-          question_id: "3",
-          answer_id: "3",
-          img: "https://ehliyetsinavihazirlik.com/images/23araliksorulari/21.png",
-        },
-      ],
-    },
-  ];
+  const selectedDetails = useSelector(state => state.quiz.selectedDetails);
+  const dispatch = useDispatch();
+
+  // navigation.addListener("beforeRemove", (e) => {
+  //   console.log("çıkıyor");
+  //   let details = {
+  //     quiz_id: 0,
+  //     questions: [],
+  //     answers: [],
+  //   };
+  //   dispatch(setSelectedDetails(details));
+  // });
+
+  if (selectedDetails.quiz_id === 0) {
+    axiosInstance.get("/get_quiz.php")
+      .then(function(response) {
+        response = response.data;
+        if (response.hasOwnProperty("ok") && response.ok === true) {
+          let details = {
+            quiz_id: response.quiz_id,
+            questions: response.questions,
+            answers: response.answers,
+          };
+          dispatch(setSelectedDetails(details));
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  console.log(selectedDetails);
   const answers = useSelector(state => state.quiz.answers);
   const quizResult = () => {
     let true_answers = [
@@ -142,18 +88,22 @@ const Start = ({ navigation }) => {
         }
       });
     });
-
     Alert.alert("Doğru" + point.success + " Yanlış" + point.error + " Boş" + (question_data.length - (point.success + point.error)));
   };
+
+
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
       <components.StatusBar theme="dark" />
       <components.PageHeader quiz="true" theme="dark" text="Sınav Adı" navigation={navigation} />
       <View style={[styles.app.page_container]}>
         <ScrollView
+          onMomentumScrollEnd={({ nativeEvent }) => {
+            console.log(isCloseToBottom(nativeEvent));
+          }}
           showsVerticalScrollIndicator={false}
           style={styles.question.scrollbar}>
-          {question_data.map((value, index) => {
+          {selectedDetails.questions.map((value, index) => {
             return <components.Question
               key={(index + 1)}
               index={(index + 1)}
@@ -173,7 +123,6 @@ const Start = ({ navigation }) => {
           </Pressable>
           }
         </ScrollView>
-
       </View>
     </SafeAreaView>
   );

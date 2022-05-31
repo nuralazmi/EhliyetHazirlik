@@ -43,7 +43,7 @@ const home = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     borderRadius: 20,
-    borderWidth: 2,
+    borderWidth: 0,
     borderColor: "#FFFFFF",
     shadowColor: "#acacac",
     shadowOffset: {
@@ -57,11 +57,14 @@ const home = StyleSheet.create({
   },
   button_random: {
     backgroundColor: "#3e4684",
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#e2e2e2",
   },
   button_press: {
-    borderColor: "#3b1b1b",
+    backgroundColor: "#e2e2e2",
+  },
+  button_random_press: {
+    backgroundColor: "#525ba0",
   },
   button_random_text: {
     color: "#FFFFFF",

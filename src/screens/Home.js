@@ -2,8 +2,13 @@ import { View, Text, SafeAreaView, StatusBar, Alert, Pressable, Button } from "r
 import React from "react";
 import styles from "../stylesheet";
 import components from "../components";
+import { setSelectedDetails } from "../store/quiz";
+import { useDispatch } from "react-redux";
 
 const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  dispatch(setSelectedDetails(null));
+
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
       <components.StatusBar />
@@ -12,7 +17,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={styles.home.buttonContainer}>
         <Pressable
-          style={({ pressed }) => [styles.home.button, styles.home.button_random, pressed ? styles.home.button_press : ""]}
+          style={({ pressed }) => [styles.home.button, styles.home.button_random, pressed ? styles.home.button_random_press : ""]}
           onPress={() => navigation.navigate("Start")}
         >
           <Text style={[styles.home.button_text, styles.home.button_random_text]}

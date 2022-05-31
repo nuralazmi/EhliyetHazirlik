@@ -60,7 +60,6 @@ const question = StyleSheet.create({
     // marginBottom: 38,
     // paddingBottom: 60,
     // flexGrow:1
-    height: "50%",
   },
   sonuc_btn_container: {
     flexDirection: "row",
