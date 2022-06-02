@@ -14,18 +14,41 @@ import styles from "../stylesheet";
 import components from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../api";
-import { setSelectedDetails } from "../store/quiz";
+import { setSelectedDetails, setPage } from "../store/quiz";
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return layoutMeasurement.height + contentOffset.y >=
-    contentSize.height - paddingToBottom;
+    contentSize.height - 10;
 };
 
 
 const Start = ({ navigation }) => {
   const selectedDetails = useSelector(state => state.quiz.selectedDetails);
+  const page = useSelector(state => state.quiz.page);
   const dispatch = useDispatch();
+  let bottomCount = 0;
+  let requestEnd = true;
+  const request = () => {
+    test = false;
+    axiosInstance.get("/get_quiz.php?page=" + page)
+      .then(function(response) {
+        response = response.data;
+        if (response.hasOwnProperty("ok") && response.ok === true) {
+          requestEnd = true;
+          let details = {
+            quiz_id: response.quiz_id,
+            questions: response.questions,
+            answers: response.answers,
+          };
+          dispatch(setSelectedDetails(details));
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
 
   // navigation.addListener("beforeRemove", (e) => {
   //   console.log("çıkıyor");
@@ -38,21 +61,7 @@ const Start = ({ navigation }) => {
   // });
 
   if (selectedDetails.quiz_id === 0) {
-    axiosInstance.get("/get_quiz.php")
-      .then(function(response) {
-        response = response.data;
-        if (response.hasOwnProperty("ok") && response.ok === true) {
-          let details = {
-            quiz_id: response.quiz_id,
-            questions: response.questions,
-            answers: response.answers,
-          };
-          dispatch(setSelectedDetails(details));
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    request();
   }
 
   console.log(selectedDetails);
@@ -99,7 +108,15 @@ const Start = ({ navigation }) => {
       <View style={[styles.app.page_container]}>
         <ScrollView
           onMomentumScrollEnd={({ nativeEvent }) => {
-            console.log(isCloseToBottom(nativeEvent));
+            if (isCloseToBottom(nativeEvent)) {
+              bottomCount++;
+              if (bottomCount % 3 === 0 && requestEnd) {
+                dispatch(setPage(1));
+                request();
+                bottomCount = 0;
+                requestEnd = false;
+              }
+            }
           }}
           showsVerticalScrollIndicator={false}
           style={styles.question.scrollbar}>
