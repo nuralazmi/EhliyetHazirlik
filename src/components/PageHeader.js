@@ -14,6 +14,7 @@ const PageHeader = (props) => {
     { backgroundColor: props.theme === "dark" ? colors.dark.backgroundColor : colors.light.backgroundColor }]}>
     <View style={styles.app.header_icon_container}>
       <Pressable
+        style={styles.app.header_icon_pressable}
         onPress={() => props.navigation.goBack()}
       >
         <FontAwesomeIcon size={21} style={[styles.app.header_icon,

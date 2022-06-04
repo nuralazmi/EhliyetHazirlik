@@ -30,6 +30,10 @@ const app = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  header_icon_pressable: {
+    // backgroundColor: "red",
+    width : 40,
+  },
   header_icon: {
     marginLeft: -4,
   },
