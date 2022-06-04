@@ -12,6 +12,10 @@ export const quiz = createSlice({
     questions: [],
     answers: [],
     answer_key: [],
+    quiz_list: [],
+    quiz_list_page: 0,
+    quiz_list_last_page: 0,
+    list_end: false,
   },
   reducers: {
     setLoading: (state, action) => {
@@ -42,11 +46,31 @@ export const quiz = createSlice({
     setEnd: (state, action) => {
       state.end = action.payload;
     },
+    setListEnd: (state, action) => {
+      state.list_end = action.payload;
+    },
     setLastPage: (state, action) => {
       state.last_page = action.payload;
     },
     setQuizName: (state, action) => {
       state.quiz_name = action.payload === "" ? "Yükleniyor..." : action.payload;
+    },
+    setQuizList: (state, action) => {
+      state.quiz_list = state.quiz_list_page === 0 ? action.payload : [...state.quiz_list, ...action.payload];
+    },
+    setQuizListPage: (state, action) => {
+      state.quiz_list_page = action.payload;
+    },
+    setQuizListLastPage: (state, action) => {
+      state.quiz_list_last_page = action.payload;
+    },
+    setZero: (state, action) => {
+      state.quiz_id = action.payload;
+      state.quiz_name = "Yükleniyor...";
+      state.questions = [];
+      state.answers = [];
+      state.page = 0;
+      state.isLoading = false;
     },
   },
 });
@@ -63,6 +87,11 @@ export const {
   setEnd,
   setLastPage,
   setQuizName,
+  setQuizList,
+  setQuizListPage,
+  setQuizListLastPage,
+  setListEnd,
+  setZero,
 } = quiz.actions;
 
 export default quiz.reducer;

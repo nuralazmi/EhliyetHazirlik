@@ -40,7 +40,7 @@ const Start = ({ navigation }) => {
   const question_limit = 50;
   const page_counter = 5;
   const getData = () => {
-    if (questions.length < question_limit) {
+    if (end === false) {
       dispatch(setLoading(true));
       dispatch(setLastPage(page));
       axiosInstance.get(`/get_quiz.php?quiz_id=${quiz_id}&page=${page}`)
@@ -51,8 +51,8 @@ const Start = ({ navigation }) => {
           dispatch(setQuiz(response.quiz_id));
           dispatch(setLoading(false));
           dispatch(setQuizName(response.quiz_name));
-          if (response.end === true) dispatch(setEnd(true));
-          else dispatch(setEnd(false));
+          dispatch(setEnd(response.end));
+          console.log(response.end);
         });
     }
   };
@@ -72,8 +72,7 @@ const Start = ({ navigation }) => {
   };
 
   const loadMoreItem = () => {
-    dispatch(setPage(page + 1));
-    if (questions.length === question_limit) dispatch(setPage(question_limit / page_counter));
+    if (end !== true) dispatch(setPage(page + 1));
   };
 
   const renderLoader = () => {
@@ -97,20 +96,7 @@ const Start = ({ navigation }) => {
 
 
   const quizResult = () => {
-    let point = {
-      success: 0,
-      error: 0,
-      empty: 0,
-    };
-    answers.map(answer => {
-      answer_keys.map(trueanswer => {
-        if (trueanswer.quiz_id === answer.quiz_id && trueanswer.question_id === answer.question_id) {
-          if (trueanswer.value === answer.value) point.success++;
-          else point.error++;
-        }
-      });
-    });
-    Alert.alert("Doğru" + point.success + " Yanlış" + point.error + " Boş" + (questions.length - (point.success + point.error)));
+    navigation.navigate("Result");
   };
 
   return (
