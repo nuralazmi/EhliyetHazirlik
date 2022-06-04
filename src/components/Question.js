@@ -2,13 +2,10 @@ import { View, Text, Image, Pressable } from "react-native";
 import styles from "../stylesheet";
 import React from "react";
 import RadioButtonContainer from "./Input/RadioButton/RadioButtonContainer";
-import { useDispatch } from "react-redux";
-import { setAnswer } from "../store/quiz";
 
 const Question = (props) => {
-  const dispatch = useDispatch();
   const onRadioButtonPress = (itemIdx) => {
-    console.log("aa");
+
   };
 
   return (

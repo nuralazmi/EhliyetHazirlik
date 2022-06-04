@@ -3,18 +3,28 @@ import { createSlice } from "@reduxjs/toolkit";
 export const quiz = createSlice({
   name: "app",
   initialState: {
+    isLoading: false,
+    end: false,
     page: 0,
-    selectedQuiz: 0,
-    selectedDetails: {
-      quiz_id: 0,
-      questions: [],
-      answers: [],
-    },
+    last_page: 0,
+    quiz_id: 0,
+    quiz_name: "",
+    questions: [],
     answers: [],
+    answer_key: [],
   },
   reducers: {
-    setSelectedQuiz: (state, action) => {
-      state.selectedQuiz = action.payload;
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
+    setQuiz: (state, action) => {
+      state.quiz_id = action.payload;
+    },
+    setQuestion: (state, action) => {
+      state.questions = state.page === 0 ? action.payload : [...state.questions, ...action.payload];
     },
     setAnswer: (state, action) => {
       let answer = action.payload;
@@ -26,31 +36,33 @@ export const quiz = createSlice({
       let question_id = action.payload;
       state.answers = state.answers.filter(item => item.question_id !== question_id);
     },
-    setPage: (state, action) => {
-      state.page = state.page + action.payload;
+    setAnswersKey: (state, action) => {
+      state.answer_key = state.page === 0 ? action.payload : [...state.answer_key, ...action.payload];
     },
-    setSelectedDetails: (state, action) => {
-      if (action.payload === null) {
-        state.selectedDetails = {
-          quiz_id: 0,
-          questions: [],
-          answers: [],
-        };
-      } else {
-        // state.selectedDetails = action.payload;
-        if (state.page > 1) {
-          action.payload.questions.map(item => {
-            state.selectedDetails.questions.push(item);
-          });
-        } else {
-          state.selectedDetails = action.payload;
-        }
-      }
+    setEnd: (state, action) => {
+      state.end = action.payload;
+    },
+    setLastPage: (state, action) => {
+      state.last_page = action.payload;
+    },
+    setQuizName: (state, action) => {
+      state.quiz_name = action.payload === "" ? "Yükleniyor..." : action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setSelectedQuiz, setAnswer, deleteAnswer, setSelectedDetails, setPage } = quiz.actions;
+export const {
+  setLoading,
+  setPage,
+  setQuiz,
+  setQuestion,
+  setAnswer,
+  deleteAnswer,
+  setAnswersKey,
+  setEnd,
+  setLastPage,
+  setQuizName,
+} = quiz.actions;
 
 export default quiz.reducer;

@@ -7,139 +7,132 @@ import {
   Button,
   Pressable,
   Dimensions,
-  Alert, Animated,
+  Alert, Animated, FlatList, ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../stylesheet";
 import components from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../api";
-import { setSelectedDetails, setPage } from "../store/quiz";
-
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-  const paddingToBottom = 20;
-  return layoutMeasurement.height + contentOffset.y >=
-    contentSize.height - 10;
-};
+import {
+  setLoading,
+  setQuestion,
+  setPage,
+  setAnswersKey,
+  setQuiz,
+  setEnd,
+  setLastPage,
+  setQuizName,
+} from "../store/quiz";
 
 
 const Start = ({ navigation }) => {
-  const selectedDetails = useSelector(state => state.quiz.selectedDetails);
-  const page = useSelector(state => state.quiz.page);
   const dispatch = useDispatch();
-  let bottomCount = 0;
-  let requestEnd = true;
-  const request = () => {
-    test = false;
-    axiosInstance.get("/get_quiz.php?page=" + page)
-      .then(function(response) {
-        response = response.data;
-        if (response.hasOwnProperty("ok") && response.ok === true) {
-          requestEnd = true;
-          let details = {
-            quiz_id: response.quiz_id,
-            questions: response.questions,
-            answers: response.answers,
-          };
-          dispatch(setSelectedDetails(details));
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+  const questions = useSelector(state => state.quiz.questions);
+  const isLoading = useSelector(state => state.quiz.isLoading);
+  const page = useSelector(state => state.quiz.page);
+  const lastpage = useSelector(state => state.quiz.last_page);
+  const end = useSelector(state => state.quiz.end);
+  const answers = useSelector(state => state.quiz.answers);
+  const answer_keys = useSelector(state => state.quiz.answer_key);
+  const quiz_id = useSelector(state => state.quiz.quiz_id);
+  const quiz_name = useSelector(state => state.quiz.quiz_name);
+  const question_limit = 50;
+  const page_counter = 5;
+  const getData = () => {
+    if (questions.length < question_limit) {
+      dispatch(setLoading(true));
+      dispatch(setLastPage(page));
+      axiosInstance.get(`/get_quiz.php?quiz_id=${quiz_id}&page=${page}`)
+        .then(response => {
+          response = response.data;
+          dispatch(setQuestion(response.questions));
+          dispatch(setAnswersKey(response.answers));
+          dispatch(setQuiz(response.quiz_id));
+          dispatch(setLoading(false));
+          dispatch(setQuizName(response.quiz_name));
+          if (response.end === true) dispatch(setEnd(true));
+          else dispatch(setEnd(false));
+        });
+    }
   };
 
+  const renderItem = ({ item }) => {
+    return (
+      <components.Question
+        index={item.index}
+        details={item.details}
+        items={item.items}
+        question={item.header}
+        question_type={item.question_type}
+        item_type={item.item_type}
+        img={item.img}
+      />
+    );
+  };
 
-  // navigation.addListener("beforeRemove", (e) => {
-  //   console.log("çıkıyor");
-  //   let details = {
-  //     quiz_id: 0,
-  //     questions: [],
-  //     answers: [],
-  //   };
-  //   dispatch(setSelectedDetails(details));
-  // });
+  const loadMoreItem = () => {
+    dispatch(setPage(page + 1));
+    if (questions.length === question_limit) dispatch(setPage(question_limit / page_counter));
+  };
 
-  if (selectedDetails.quiz_id === 0) {
-    request();
-  }
+  const renderLoader = () => {
+    return isLoading ? (
+      <View
+        style={{
+          padding: 20,
+        }}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    ) : null;
+  };
 
-  console.log(selectedDetails);
-  const answers = useSelector(state => state.quiz.answers);
+  // componentDidMount ve componentDidUpdate kullanımına benzer bir kullanım sunar:
+
+  useEffect(() => {
+    if (page === 0 || page !== lastpage) {
+      getData();
+    }
+  }, [page]);
+
+
   const quizResult = () => {
-    let true_answers = [
-      {
-        quiz_id: "1",
-        question_id: "1",
-        value: "A",
-      },
-      {
-        quiz_id: "1",
-        question_id: "2",
-        value: "B",
-      },
-      {
-        quiz_id: "1",
-        question_id: "3",
-        value: "C",
-      },
-    ];
     let point = {
       success: 0,
       error: 0,
       empty: 0,
     };
     answers.map(answer => {
-      true_answers.map(trueanswer => {
+      answer_keys.map(trueanswer => {
         if (trueanswer.quiz_id === answer.quiz_id && trueanswer.question_id === answer.question_id) {
           if (trueanswer.value === answer.value) point.success++;
           else point.error++;
         }
       });
     });
-    Alert.alert("Doğru" + point.success + " Yanlış" + point.error + " Boş" + (question_data.length - (point.success + point.error)));
+    Alert.alert("Doğru" + point.success + " Yanlış" + point.error + " Boş" + (questions.length - (point.success + point.error)));
   };
-
 
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
       <components.StatusBar theme="dark" />
-      <components.PageHeader quiz="true" theme="dark" text="Sınav Adı" navigation={navigation} />
+      <components.PageHeader quiz="true" theme="dark" text={quiz_name} navigation={navigation} />
       <View style={[styles.app.page_container]}>
-        <ScrollView
-          onMomentumScrollEnd={({ nativeEvent }) => {
-            if (isCloseToBottom(nativeEvent)) {
-              bottomCount++;
-              if (bottomCount % 3 === 0 && requestEnd) {
-                dispatch(setPage(1));
-                request();
-                bottomCount = 0;
-                requestEnd = false;
-              }
-            }
-          }}
-          showsVerticalScrollIndicator={false}
-          style={styles.question.scrollbar}>
-          {selectedDetails.questions.map((value, index) => {
-            return <components.Question
-              key={(index + 1)}
-              index={(index + 1)}
-              details={value.details}
-              items={value.items}
-              question={value.header}
-              question_type={value.question_type}
-              item_type={value.item_type}
-              img={value.img}
-            />;
-          })}
-          {answers.length > 0 &&
-          <Pressable
-            onPress={quizResult}
-            style={({ pressed }) => [styles.question.sonuc_btn_container, pressed ? styles.question.sonuc_btn_container_press : styles.question.sonuc_btn_container]}>
-            <Text style={styles.question.sonuc_btn_text}>Sınavı Bitir ve Sonucu Hesapla</Text>
-          </Pressable>
-          }
-        </ScrollView>
+        <FlatList
+          data={questions}
+          renderItem={renderItem}
+          keyExtractor={item => item.header}
+          onEndReached={loadMoreItem}
+          ListFooterComponent={renderLoader}
+          onEndReachedThreshold={0.5}
+        />
+        {questions.length >= question_limit &&
+        <Pressable
+          onPress={quizResult}
+          style={({ pressed }) => [styles.question.sonuc_btn_container, pressed ? styles.question.sonuc_btn_container_press : styles.question.sonuc_btn_container]}>
+          <Text style={styles.question.sonuc_btn_text}>Sınavı Bitir ve Sonucu Hesapla</Text>
+        </Pressable>
+        }
       </View>
     </SafeAreaView>
   );

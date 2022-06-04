@@ -2,13 +2,13 @@ import { View, Text, SafeAreaView, StatusBar, Alert, Pressable, Button } from "r
 import React from "react";
 import styles from "../stylesheet";
 import components from "../components";
-import { setSelectedDetails } from "../store/quiz";
 import { useDispatch } from "react-redux";
+import { setQuizName } from "../store/quiz";
+
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  dispatch(setSelectedDetails(null));
-
+  dispatch(setQuizName(""));
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
       <components.StatusBar />
