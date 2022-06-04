@@ -3,6 +3,7 @@ import home from "./home";
 import question from "./question";
 import start from "./start";
 import radiobutton from "./radiobutton";
+import info from "./info";
 import colors from "./colors";
 
 
@@ -65,6 +66,7 @@ const styles = {
   question,
   start,
   radiobutton,
+  info,
 };
 export default styles;
 

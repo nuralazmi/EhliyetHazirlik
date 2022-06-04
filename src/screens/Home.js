@@ -29,6 +29,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.home.button_text}>Sınav Listesi</Text>
         </Pressable>
         <Pressable
+          onPress={() => navigation.navigate("Info")}
           style={({ pressed }) => [styles.home.button, pressed ? styles.home.button_press : styles.home.button]}>
           <Text style={styles.home.button_text}>Puanım Nasıl Hesaplanıyor?</Text>
         </Pressable>

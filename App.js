@@ -33,6 +33,11 @@ const App = () => {
           component={screens.List}
           options={{ title: "List" }}
         />
+        <Stack.Screen
+          name="Info"
+          component={screens.Info}
+          options={{ title: "Info" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
