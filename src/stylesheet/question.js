@@ -95,6 +95,7 @@ const question = StyleSheet.create({
   },
   txtNameStyle: {
     fontSize: 16,
+    // fontWeight : 'bold',
   },
   txtEmailStyle: {
     color: "#777",
@@ -103,7 +104,23 @@ const question = StyleSheet.create({
     marginVertical: 16,
     alignItems: "center",
   },
-
+  listinfo_container: {
+    marginTop: 4,
+  },
+  listinfo_complete: {
+    color: "#278643",
+    fontSize: 13,
+  },
+  listinfo_count: {
+    color: "#d5903a",
+    fontSize: 13,
+  },
+  listinfo_complete_ok: {
+    color: "#278643",
+  },
+  listinfo_complete_fail: {
+    color: "#bf2222",
+  },
 });
 
 export default question;

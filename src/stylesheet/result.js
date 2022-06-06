@@ -5,7 +5,7 @@ const result = StyleSheet.create({
     // paddingHorizontal : 20,
     // paddingVertical : 100,
     padding: 20,
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   text_container: {
     flexDirection: "row",
@@ -28,6 +28,42 @@ const result = StyleSheet.create({
   },
   result_fail: {
     color: "#bf2222",
+  },
+  btn: {
+    backgroundColor: "#FFFFFF",
+    marginVertical: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+    padding: 10,
+    borderRadius: 20,
+    borderWidth: 0,
+    borderColor: "#FFFFFF",
+    shadowColor: "#acacac",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
+  },
+  btn_next: {
+    backgroundColor: "#3e4684",
+  },
+  btn_end: {
+    backgroundColor: "#278643",
+  },
+  btn_text: {
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  addbox: {
+    backgroundColor: "gray",
+    width: "100%",
+    height: 100,
+    marginTop: 20,
   },
 });
 

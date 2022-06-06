@@ -112,7 +112,7 @@ const Start = ({ navigation }) => {
           ListFooterComponent={renderLoader}
           onEndReachedThreshold={0.5}
         />
-        {questions.length >= question_limit &&
+        {(end && answers.length > 0 && questions.length > 0) &&
         <Pressable
           onPress={quizResult}
           style={({ pressed }) => [styles.question.sonuc_btn_container, pressed ? styles.question.sonuc_btn_container_press : styles.question.sonuc_btn_container]}>

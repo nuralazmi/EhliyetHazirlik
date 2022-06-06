@@ -1,9 +1,11 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import store from "./src/store";
-import { Provider } from "react-redux";
-
+import { Provider, useDispatch, useSelector } from "react-redux";
+import components from "./src/components";
+import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
+import { setConnect } from "./src/store/app";
 
 import screens from "./src/screens";
 
@@ -11,8 +13,10 @@ const Stack = createNativeStackNavigator();
 
 
 const App = () => {
+  const netInfo = useNetInfo();
+
   return (
-    <NavigationContainer>
+    netInfo.isConnected ? <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -43,8 +47,13 @@ const App = () => {
           component={screens.Result}
           options={{ title: "Result" }}
         />
+        <Stack.Screen
+          name="Wait"
+          component={screens.Wait}
+          options={{ title: "Wait" }}
+        />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer> : <components.Offline />
   );
 };
 

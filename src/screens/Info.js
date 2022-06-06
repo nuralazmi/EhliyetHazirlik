@@ -6,7 +6,7 @@ import components from "../components";
 const Info = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>
-      <components.StatusBar theme="dark" />
+      <components.StatusBar theme="dark"  />
       <components.PageHeader theme="dark" text="Puan Nasıl Hesaplanıyor?" navigation={navigation} />
       <View style={[styles.app.page_container, styles.info.container]}>
         <Text style={styles.info.text}>
