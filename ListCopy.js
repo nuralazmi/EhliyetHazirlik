@@ -14,7 +14,6 @@ import {
 } from "../store/quiz";
 import axiosInstance from "../api";
 import AsyncStorage from "@react-native-community/async-storage";
-import ListData from "../datas/ListData";
 
 const List = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -24,22 +23,17 @@ const List = ({ navigation }) => {
   const question_limit = 50;
   const page_counter = 5;
   const getData = () => {
-    dispatch(setLoading(true));
-    dispatch(setQuizListLastPage(quiz_list_page));
-
-    setTimeout(() => {
-      dispatch(setLoading(false));
-      dispatch(setQuizList(ListData.data));
-      dispatch(setListEnd(true));
-    }, 1500);
-
-    // axiosInstance.get(`/quiz_list.php?page=${quiz_list_page}`)
-    //   .then(response => {
-    //     response = response.data;
-    //     dispatch(setLoading(false));
-    //     dispatch(setQuizList(response.data));
-    //     dispatch(setListEnd(response.end));
-    //   });
+    if (list_end === false) {
+      dispatch(setLoading(true));
+      dispatch(setQuizListLastPage(quiz_list_page));
+      axiosInstance.get(`/quiz_list.php?page=${quiz_list_page}`)
+        .then(response => {
+          response = response.data;
+          dispatch(setLoading(false));
+          dispatch(setQuizList(response.data));
+          dispatch(setListEnd(response.end));
+        });
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -105,6 +99,7 @@ const List = ({ navigation }) => {
     const storageComplete = await AsyncStorage.getItem("complete");
     if (storageComplete !== null) {
       setComplete(JSON.parse(storageComplete));
+      console.log(complete);
     }
   };
 
@@ -121,7 +116,7 @@ const List = ({ navigation }) => {
       getComplete();
     }
 
-  }, []);
+  }, [quiz_list_page]);
 
   return (
     <SafeAreaView style={[styles.app.page, styles.home.main]}>

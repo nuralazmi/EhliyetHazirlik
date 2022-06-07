@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../stylesheet";
 import components from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { setZero } from "../store/quiz";
+import { setQuiz, setZero } from "../store/quiz";
 import AsyncStorage from "@react-native-community/async-storage";
 
 
@@ -16,7 +16,6 @@ const HomeScreen = ({ navigation }) => {
     const getAnswer = await AsyncStorage.getItem("answer");
     if (getAnswer !== null) {
       setStorageAnswers(JSON.parse(getAnswer));
-      console.log(getAnswer);
     }
   };
   useEffect(() => {
@@ -33,6 +32,7 @@ const HomeScreen = ({ navigation }) => {
           style={({ pressed }) => [styles.home.button, styles.home.button_random, pressed ? styles.home.button_random_press : ""]}
           onPress={() => {
             dispatch(setZero(0));
+            dispatch(setQuiz(Math.floor(Math.random() * 20)));
             navigation.navigate("Start");
           }}
         >

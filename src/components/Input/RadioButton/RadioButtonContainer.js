@@ -11,15 +11,15 @@ export default function RadioButtonContainer({ item_type, values, onPress }) {
   const _onPress = (idx) => {
 
     onPress(idx);
-
     if (answers.filter(item => item.question_id === values[idx].question_id && item.value === values[idx].value).length > 0)
       dispatch(deleteAnswer(values[idx].question_id));
     else {
       let data = {
         value: values[idx].value,
-        quiz_id: values[idx].quiz_id,
+        quiz_id: values[idx].quiz_id - 1,
         question_id: values[idx].question_id,
       };
+      console.log("aa", data.quiz_id);
       dispatch(setAnswer(data));
     }
   };

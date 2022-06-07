@@ -9,10 +9,12 @@ const Question = (props) => {
   };
 
   return (
-    <View style={styles.question.soru_kutusu}>
+    <View style={styles.question.soru_kutusu}
+          key={Math.floor(Math.random() * 562)}
+    >
       <View style={styles.question.detay_kutusu}>
         {props.details.map((value, index) => {
-          return <Text style={styles.question.detay}>{value}</Text>;
+          return <Text key={props.index+index} style={styles.question.detay}>{value}</Text>;
         })}
       </View>
       <Text style={styles.question.soru}>{props.index + ". " + props.question}</Text>

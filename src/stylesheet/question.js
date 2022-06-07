@@ -61,6 +61,13 @@ const question = StyleSheet.create({
     // paddingBottom: 60,
     // flexGrow:1
   },
+  sonuc_btn_view: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.dark.backgroundColor,
+    padding: 13,
+  },
   sonuc_btn_container: {
     flexDirection: "row",
     justifyContent: "center",

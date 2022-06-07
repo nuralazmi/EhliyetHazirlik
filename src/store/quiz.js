@@ -107,11 +107,12 @@ export const quiz = createSlice({
     setZero: (state, action) => {
       state.quiz_id = action.payload;
       state.quiz_name = "Yükleniyor...";
-      state.questions = [];
-      state.answers = [];
+      // state.questions = [];
+      // state.answers = [];
       state.page = 0;
       state.isLoading = false;
       state.complete = false;
+      state.end = false;
     },
   },
 });

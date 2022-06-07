@@ -24,7 +24,9 @@ import {
   setLastPage,
   setQuizName,
 } from "../store/quiz";
-
+import QuestionsData from "../datas/QuestionsData";
+import ListData from "../datas/ListData";
+import AnswersData from "../datas/AnswersData";
 
 const Start = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -43,31 +45,56 @@ const Start = ({ navigation }) => {
     if (end === false) {
       dispatch(setLoading(true));
       dispatch(setLastPage(page));
-      axiosInstance.get(`/get_quiz.php?quiz_id=${quiz_id}&page=${page}`)
-        .then(response => {
-          response = response.data;
-          dispatch(setQuestion(response.questions));
-          dispatch(setAnswersKey(response.answers));
-          dispatch(setQuiz(response.quiz_id));
-          dispatch(setLoading(false));
-          dispatch(setQuizName(response.quiz_name));
-          dispatch(setEnd(response.end));
-          console.log(response.end);
-        });
+      setTimeout(() => {
+        console.log(quiz_id);
+        const quizData = ListData.getDataQuiz(quiz_id);
+        if (quizData !== null) {
+          dispatch(setQuiz(quizData.quiz_id));
+          dispatch(setQuizName(quizData.quiz_name));
+        }
+        dispatch(setQuestion(QuestionsData(quiz_id)));
+        dispatch(setAnswersKey(AnswersData.getDataAnswers(quiz_id)));
+        dispatch(setLoading(false));
+        dispatch(setEnd(true));
+      }, 1500);
     }
+
+    // axiosInstance.get(`/get_quiz.php?quiz_id=${quiz_id}&page=${page}`)
+    //   .then(response => {
+    //     response = response.data;
+    //     dispatch(setQuestion(response.questions));
+    //     dispatch(setAnswersKey(response.answers));
+    //     dispatch(setQuiz(response.quiz_id));
+    //     dispatch(setLoading(false));
+    //     dispatch(setQuizName(response.quiz_name));
+    //     dispatch(setEnd(response.end));
+    //     console.log(response.end);
+    //   });
   };
 
   const renderItem = ({ item }) => {
     return (
-      <components.Question
-        index={item.index}
-        details={item.details}
-        items={item.items}
-        question={item.header}
-        question_type={item.question_type}
-        item_type={item.item_type}
-        img={item.img}
-      />
+      <View>
+        <components.Question
+          index={item.index}
+          details={item.details}
+          items={item.items}
+          question={item.header}
+          question_type={item.question_type}
+          item_type={item.item_type}
+          img={item.img}
+        />
+        {item.index + 1 === question_limit &&
+        <Pressable
+          onPress={quizResult}
+          style={({ pressed }) => [styles.question.sonuc_btn_container, pressed ? styles.question.sonuc_btn_container_press : styles.question.sonuc_btn_container]}>
+          <Text style={styles.question.sonuc_btn_text}>Sınavı Bitir ve Sonucu Hesapla</Text>
+        </Pressable>
+        }
+        {item.index % 5 === 0 &&
+        <View style={styles.result.addbox}></View>
+        }
+      </View>
     );
   };
 
@@ -89,10 +116,11 @@ const Start = ({ navigation }) => {
   // componentDidMount ve componentDidUpdate kullanımına benzer bir kullanım sunar:
 
   useEffect(() => {
-    if (page === 0 || page !== lastpage) {
-      getData();
-    }
-  }, [page]);
+    getData();
+    // if (page === 0 || page !== lastpage) {
+    //   getData();
+    // }
+  }, []);
 
 
   const quizResult = () => {
@@ -104,21 +132,16 @@ const Start = ({ navigation }) => {
       <components.StatusBar theme="dark" />
       <components.PageHeader quiz="true" theme="dark" text={quiz_name} navigation={navigation} />
       <View style={[styles.app.page_container]}>
-        <FlatList
-          data={questions}
-          renderItem={renderItem}
-          keyExtractor={item => item.header}
-          onEndReached={loadMoreItem}
-          ListFooterComponent={renderLoader}
-          onEndReachedThreshold={0.5}
-        />
-        {(end && answers.length > 0 && questions.length > 0) &&
-        <Pressable
-          onPress={quizResult}
-          style={({ pressed }) => [styles.question.sonuc_btn_container, pressed ? styles.question.sonuc_btn_container_press : styles.question.sonuc_btn_container]}>
-          <Text style={styles.question.sonuc_btn_text}>Sınavı Bitir ve Sonucu Hesapla</Text>
-        </Pressable>
-        }
+        <View>
+          <FlatList
+            data={questions}
+            renderItem={renderItem}
+            keyExtractor={item => item.header}
+            onEndReached={loadMoreItem}
+            ListFooterComponent={renderLoader}
+            onEndReachedThreshold={0.5}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );

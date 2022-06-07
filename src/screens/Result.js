@@ -10,6 +10,7 @@ const Result = ({ navigation }) => {
   const answers = useSelector(state => state.quiz.answers);
   const answer_keys = useSelector(state => state.quiz.answer_key);
   const questions = useSelector(state => state.quiz.questions);
+  console.log(answers);
   let point = {
     success: 0,
     error: 0,
